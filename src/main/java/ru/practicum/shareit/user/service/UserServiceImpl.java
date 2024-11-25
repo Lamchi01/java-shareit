@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.storage.UserStorage;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+
     @Override
     public UserDto addUser(UserDto userDto) {
         return userStorage.addUser(userDto);

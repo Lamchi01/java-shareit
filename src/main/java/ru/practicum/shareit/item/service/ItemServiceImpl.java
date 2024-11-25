@@ -14,6 +14,7 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final UserStorage userStorage;
     private final ItemStorage itemStorage;
+
     @Override
     public ItemDto addItem(ItemDto itemDto, long userId) {
         userStorage.getUser(userId);
@@ -38,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(String  text, long userId) {
+    public List<ItemDto> searchItems(String text, long userId) {
         userStorage.getUser(userId);
         if (text.isBlank()) {
             return List.of();
