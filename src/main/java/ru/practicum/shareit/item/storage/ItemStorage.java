@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.storage;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -19,12 +18,8 @@ public class ItemStorage {
     private final Map<Long, Item> itemIdKey = new HashMap<>();
     private final Map<Long, List<Item>> itemOwnerIdKey = new HashMap<>();
 
-    public ItemDto addItem(ItemDto itemDto, long userId) {
-        Item item = new Item();
+    public ItemDto addItem(Item item, long userId) {
         item.setId(getNextId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
         item.setOwner(userId);
         log.info("Создан объект Item - {}", item);
         itemIdKey.put(item.getId(), item);
@@ -35,17 +30,7 @@ public class ItemStorage {
     }
 
     public ItemDto patchItem(ItemDto itemDto, long userId, long itemId) {
-        if (!itemOwnerIdKey.containsKey(userId)) {
-            throw new NotFoundException("Данного пользователя нет");
-        }
-        if (!itemIdKey.containsKey(itemId)) {
-            throw new NotFoundException("Вещь не найден");
-        }
-
         Item item = itemIdKey.get(itemId);
-        if (item.getOwner() != userId) {
-            throw new ValidationException("Вы не владелец этой вещи");
-        }
 
         if (itemDto.getName() != null && !itemDto.getName().isBlank()) {
             item.setName(itemDto.getName());
@@ -72,17 +57,14 @@ public class ItemStorage {
         return ItemMapper.toItemDto(item);
     }
 
-    public ItemDto getItem(long itemId) {
+    public Item getItem(long itemId) {
         if (!itemIdKey.containsKey(itemId)) {
             throw new ValidationException("Вещь не найдена");
         }
-        return ItemMapper.toItemDto(itemIdKey.get(itemId));
+        return itemIdKey.get(itemId);
     }
 
     public List<ItemDto> getAllItems(long userId) {
-        if (!itemOwnerIdKey.containsKey(userId)) {
-            throw new ValidationException("Вы не владелец этих вещей");
-        }
         return itemOwnerIdKey.get(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .toList();
