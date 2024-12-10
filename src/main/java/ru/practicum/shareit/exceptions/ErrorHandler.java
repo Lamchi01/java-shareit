@@ -1,6 +1,7 @@
 package ru.practicum.shareit.exceptions;
 
 import jakarta.validation.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,12 +21,11 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({EmailValidException.class, DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflictRequest(EmailValidException e) {
+    public ErrorResponse handleConflictRequest(final Exception e) {
         return new ErrorResponse(e.getMessage());
     }
-
 
     public record ErrorResponse(String error) {
     }
