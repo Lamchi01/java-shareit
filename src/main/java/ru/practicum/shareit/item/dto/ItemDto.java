@@ -2,9 +2,17 @@ package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
 public class ItemDto {
     private Long id;
     @NotBlank
@@ -14,4 +22,7 @@ public class ItemDto {
     @NotNull
     private Boolean available;
     private Long request;
+    private LocalDateTime lastBooking;
+    private LocalDateTime nextBooking;
+    private List<CommentDto> comments = new ArrayList<>();
 }
