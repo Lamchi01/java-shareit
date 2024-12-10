@@ -14,7 +14,7 @@ public class ItemMapper {
         itemDto.setRequest(item.getRequest() != null ? item.getRequest() : null);
         itemDto.setComments(item.getComments() != null ? item.getComments().stream()
                 .map(CommentMapper::toCommentDto)
-                .toList(): null);
+                .toList() : null);
         return itemDto;
     }
 
