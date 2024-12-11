@@ -23,10 +23,10 @@ public class Booking {
     private LocalDateTime start;
     @Column(name = "end_date", nullable = false)
     private LocalDateTime end;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User booker;
     @Column(name = "status")

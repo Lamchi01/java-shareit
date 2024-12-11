@@ -1,12 +1,13 @@
 package ru.practicum.shareit.booking.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.State;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.CreateBookingDto;
-import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.booking.service.interfaces.BookingService;
 
 import java.util.List;
 
@@ -15,11 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
     private static final String HEADER_USER_ID = "X-Sharer-User-Id";
-    private final BookingServiceImpl bookingService;
+    private final BookingService bookingService;
 
     @PostMapping
     public BookingDto addBooking(@Valid @RequestBody CreateBookingDto createBookingDto,
                            @RequestHeader(HEADER_USER_ID) long userId) {
+        if (createBookingDto.getStart().equals(createBookingDto.getEnd())) {
+            throw new ValidationException("Дата начала бронирования не может быть равна дате окончания");
+        }
         return bookingService.addBooking(createBookingDto, userId);
     }
 

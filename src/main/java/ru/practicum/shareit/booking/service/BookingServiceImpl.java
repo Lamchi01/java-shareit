@@ -36,11 +36,13 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = itemStorage.findById(createBookingDto.getItemId())
                         .orElseThrow(() -> new NotFoundException("Предмет не найден"));
-        if (createBookingDto.getStart().equals(createBookingDto.getEnd())) {
-            throw new ValidationException("Дата начала бронирования не может быть равна дате окончания");
-        }
         if (!item.getAvailable()) {
             throw new ValidationException("Предмет недоступен");
+        }
+        List<Booking> bookings = bookingStorage.findAllByIntersectingStartAndEnd(
+                item.getId(), Status.APPROVED, Status.WAITING, createBookingDto.getStart(), createBookingDto.getEnd());
+        if (!bookings.isEmpty()) {
+            throw new ValidationException("Невозможно забронировать");
         }
         Booking booking = BookingMapper.toBookingNew(createBookingDto, item, user);
         return BookingMapper.toBookingDto(bookingStorage.save(booking));

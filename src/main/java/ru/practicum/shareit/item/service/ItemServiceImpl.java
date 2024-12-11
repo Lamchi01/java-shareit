@@ -91,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isBlank()) {
             return List.of();
         }
-        List<Item> items = itemStorage.findAllByNameLikeOrDescriptionLike(text.toLowerCase());
+        List<Item> items = itemStorage.findAllByNameLikeOrDescriptionLike(text);
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .toList();
@@ -107,11 +107,7 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingStorage.findAllByItemIdAndBookerId(itemId, authorId);
         for (Booking booking : bookings) {
             if (booking.getStatus() == Status.APPROVED && booking.getEnd().isBefore(LocalDateTime.now())) {
-                Comment comment = new Comment();
-                comment.setText(text.trim());
-                comment.setAuthor(author);
-                comment.setItem(item);
-                comment.setCreated(LocalDateTime.now());
+                Comment comment = CommentMapper.toComment(text.trim(), author, item, LocalDateTime.now());
                 Comment createdComment = commentStorage.save(comment);
                 return CommentMapper.toCommentDto(createdComment);
             }

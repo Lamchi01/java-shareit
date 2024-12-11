@@ -17,10 +17,10 @@ public class Comment {
     private Long id;
     @Column(name = "text", nullable = false)
     private String text;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
     @Column(name = "created", nullable = false)
