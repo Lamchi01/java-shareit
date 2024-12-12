@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("Предмет недоступен");
         }
         List<Booking> bookings = bookingStorage.findAllByIntersectingStartAndEnd(
-                item.getId(), Status.APPROVED, Status.WAITING, createBookingDto.getStart(), createBookingDto.getEnd());
+                item.getId(), createBookingDto.getStart(), createBookingDto.getEnd());
         if (!bookings.isEmpty()) {
             throw new ValidationException("Невозможно забронировать");
         }

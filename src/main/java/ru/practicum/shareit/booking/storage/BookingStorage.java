@@ -35,6 +35,6 @@ public interface BookingStorage extends JpaRepository<Booking, Long> {
 
     // Поиск бронирований на пересечение дат
     @Query("select b from Booking b " +
-            "where ?1 = b.item.id and ?2 = b.status and ?3 = b.status and ?4 <= b.start and ?5 >= b.end")
-    List<Booking> findAllByIntersectingStartAndEnd(long itemId, Status status, Status status1, LocalDateTime start, LocalDateTime end);
+            "where ?1 = b.item.id and 'APPROVED' = b.status and ?2 <= b.end AND ?3 >= b.start")
+    List<Booking> findAllByIntersectingStartAndEnd(long itemId, LocalDateTime start, LocalDateTime end);
 }
