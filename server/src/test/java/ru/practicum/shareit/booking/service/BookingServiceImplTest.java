@@ -176,12 +176,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(currentBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(currentBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByOwnerIdAndState(userId, State.CURRENT);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(currentBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -214,12 +216,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(pastBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByBookerIdAndState(user2Id, State.PAST);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(pastBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -251,12 +255,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(futureBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(futureBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByBookerIdAndState(user2Id, State.FUTURE);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(futureBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -295,6 +301,8 @@ class BookingServiceImplTest {
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(futureBookingId, bookings.getFirst().getId());
+        assertEquals(futureBookingDto.getItem().getId(), itemId);
+        assertEquals(futureBookingDto.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -326,13 +334,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
-        bookingService.patchBooking(currentBookingId, userId, false);
+        BookingDto patchBooking = bookingService.patchBooking(currentBookingId, userId, false);
 
         List<BookingDto> bookings = bookingService.findBookingsByBookerIdAndState(user2Id, State.REJECTED);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(currentBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -379,12 +388,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(currentBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(currentBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByBookerIdAndState(user2Id, State.CURRENT);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(currentBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -416,14 +427,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
-        bookingService.patchBooking(currentBookingId, userId, true);
-        bookingService.patchBooking(futureBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(pastBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByOwnerIdAndState(userId, State.PAST);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(pastBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -455,14 +466,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
-        bookingService.patchBooking(currentBookingId, userId, true);
-        bookingService.patchBooking(futureBookingId, userId, true);
+        BookingDto patchBooking = bookingService.patchBooking(futureBookingId, userId, true);
 
         List<BookingDto> bookings = bookingService.findBookingsByOwnerIdAndState(userId, State.FUTURE);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(futureBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -494,13 +505,16 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
         bookingService.patchBooking(currentBookingId, userId, true);
+        bookingService.patchBooking(pastBookingId, userId, true);
+
 
         List<BookingDto> bookings = bookingService.findBookingsByOwnerIdAndState(userId, State.WAITING);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(futureBookingId, bookings.getFirst().getId());
+        assertEquals(futureBookingDto.getItem().getId(), itemId);
+        assertEquals(futureBookingDto.getBooker().getId(), user2Id);
     }
 
     @Test
@@ -532,13 +546,14 @@ class BookingServiceImplTest {
         BookingDto futureBookingDto = bookingService.addBooking(futureBooking, user2Id);
         Long futureBookingId = futureBookingDto.getId();
 
-        bookingService.patchBooking(pastBookingId, userId, true);
-        bookingService.patchBooking(currentBookingId, userId, false);
+        BookingDto patchBooking = bookingService.patchBooking(currentBookingId, userId, false);
 
         List<BookingDto> bookings = bookingService.findBookingsByOwnerIdAndState(userId, State.REJECTED);
         assertFalse(bookings.isEmpty());
         assertEquals(1, bookings.size());
         assertEquals(currentBookingId, bookings.getFirst().getId());
+        assertEquals(patchBooking.getItem().getId(), itemId);
+        assertEquals(patchBooking.getBooker().getId(), user2Id);
     }
 
     @Test

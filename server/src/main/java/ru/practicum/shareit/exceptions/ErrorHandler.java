@@ -16,12 +16,6 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflictRequest(EmailValidException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleConflictRequest(DataIntegrityViolationException e) {
         return new ErrorResponse(e.getMessage());
     }
