@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.service;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +7,7 @@ import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingStorage;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
@@ -71,8 +71,11 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItem(long itemId) {
         Item item = itemStorage.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет не найден"));
-        item.setComments(commentStorage.findAllByItemId(itemId));
-        return ItemMapper.toItemDto(item);
+        ItemDto itemDto = ItemMapper.toItemDto(item);
+        itemDto.setComments(commentStorage.findAllByItemId(itemId).stream()
+                .map(CommentMapper::toCommentDto)
+                .toList());
+        return itemDto;
     }
 
     @Override
@@ -84,8 +87,13 @@ public class ItemServiceImpl implements ItemService {
                         .map(Item::getId)
                         .toList()).stream()
                 .collect(Collectors.groupingBy(comment -> comment.getItem().getId()));
-        for (Item item : items) {
-            item.setComments(comments.getOrDefault(item.getId(), List.of()));
+        List<ItemDto> itemDtos = items.stream()
+                .map(ItemMapper::toItemDto)
+                .toList();
+        for (ItemDto item : itemDtos) {
+            item.setComments(comments.getOrDefault(item.getId(), List.of()).stream()
+                    .map(CommentMapper::toCommentDto)
+                    .toList());
         }
         return items.stream()
                 .map(ItemMapper::toItemDto)

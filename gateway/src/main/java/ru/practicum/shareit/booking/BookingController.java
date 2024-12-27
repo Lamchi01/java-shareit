@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,9 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> addBooking(@RequestHeader(HEADER_USER_ID) long userId,
                                              @RequestBody @Valid CreateBookingDto createBookingDto) {
+        if (createBookingDto.getStart().equals(createBookingDto.getEnd())) {
+            throw new ValidationException("Дата начала бронирования не может быть равна дате окончания");
+        }
         return bookingClient.addBooking(userId, createBookingDto);
     }
 

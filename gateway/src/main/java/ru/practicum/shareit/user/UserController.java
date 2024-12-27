@@ -26,7 +26,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Object> addUser(@RequestBody @Valid UserDto userDto) {
-        if (userDto.getName() == null || userDto.getEmail() == null) throw new IllegalArgumentException();
         return userClient.addUser(userDto);
     }
 

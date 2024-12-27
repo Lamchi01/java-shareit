@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.controller;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.State;
@@ -20,9 +19,6 @@ public class BookingController {
     @PostMapping
     public BookingDto addBooking(@RequestHeader(HEADER_USER_ID) long userId,
                                  @RequestBody CreateBookingDto createBookingDto) {
-        if (createBookingDto.getStart().equals(createBookingDto.getEnd())) {
-            throw new ValidationException("Дата начала бронирования не может быть равна дате окончания");
-        }
         return bookingService.addBooking(createBookingDto, userId);
     }
 

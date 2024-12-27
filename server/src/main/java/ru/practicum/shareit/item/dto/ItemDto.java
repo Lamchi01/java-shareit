@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,5 +20,5 @@ public class ItemDto {
     private Long requestId;
     private LocalDateTime lastBooking;
     private LocalDateTime nextBooking;
-    private List<CommentDto> comments = new ArrayList<>();
+    private List<CommentDto> comments;
 }

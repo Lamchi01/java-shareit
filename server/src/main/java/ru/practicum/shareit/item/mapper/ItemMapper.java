@@ -12,9 +12,6 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
-                .comments(item.getComments() != null ? item.getComments().stream()
-                        .map(CommentMapper::toCommentDto)
-                        .toList() : null)
                 .build();
     }
 
